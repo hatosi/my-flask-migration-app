@@ -1,0 +1,698 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hà Nội",
+        "NAME_ENG": "Ha Noi"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.4, 20.8], [106.2, 20.8], [106.2, 21.4], [105.4, 21.4], [105.4, 20.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "TP. Hồ Chí Minh",
+        "NAME_ENG": "Ho Chi Minh City"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.4, 10.5], [106.9, 10.5], [106.9, 11.1], [106.4, 11.1], [106.4, 10.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Đà Nẵng",
+        "NAME_ENG": "Da Nang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.9, 15.9], [108.4, 15.9], [108.4, 16.2], [107.9, 16.2], [107.9, 15.9]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hải Phòng",
+        "NAME_ENG": "Hai Phong"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.4, 20.6], [107.0, 20.6], [107.0, 21.0], [106.4, 21.0], [106.4, 20.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Cần Thơ",
+        "NAME_ENG": "Can Tho"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.4, 9.8], [106.1, 9.8], [106.1, 10.3], [105.4, 10.3], [105.4, 9.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "An Giang",
+        "NAME_ENG": "An Giang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.8, 10.2], [105.6, 10.2], [105.6, 10.8], [104.8, 10.8], [104.8, 10.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bà Rịa - Vũng Tàu",
+        "NAME_ENG": "Ba Ria - Vung Tau"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.8, 10.1], [107.6, 10.1], [107.6, 10.9], [106.8, 10.9], [106.8, 10.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bắc Giang",
+        "NAME_ENG": "Bac Giang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.9, 21.0], [106.8, 21.0], [106.8, 21.6], [105.9, 21.6], [105.9, 21.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bắc Kạn",
+        "NAME_ENG": "Bac Kan"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.5, 21.8], [106.2, 21.8], [106.2, 22.5], [105.5, 22.5], [105.5, 21.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bạc Liêu",
+        "NAME_ENG": "Bac Lieu"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.4, 9.0], [106.0, 9.0], [106.0, 9.6], [105.4, 9.6], [105.4, 9.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bắc Ninh",
+        "NAME_ENG": "Bac Ninh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.7, 20.9], [106.4, 20.9], [106.4, 21.4], [105.7, 21.4], [105.7, 20.9]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bến Tre",
+        "NAME_ENG": "Ben Tre"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.0, 10.0], [106.8, 10.0], [106.8, 10.5], [106.0, 10.5], [106.0, 10.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bình Định",
+        "NAME_ENG": "Binh Dinh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[108.8, 13.4], [109.6, 13.4], [109.6, 14.2], [108.8, 14.2], [108.8, 13.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bình Dương",
+        "NAME_ENG": "Binh Duong"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.1, 10.9], [107.0, 10.9], [107.0, 11.7], [106.1, 11.7], [106.1, 10.9]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bình Phước",
+        "NAME_ENG": "Binh Phuoc"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.2, 11.3], [107.4, 11.3], [107.4, 12.2], [106.2, 12.2], [106.2, 11.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Bình Thuận",
+        "NAME_ENG": "Binh Thuan"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.4, 10.6], [108.8, 10.6], [108.8, 11.6], [107.4, 11.6], [107.4, 10.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Cà Mau",
+        "NAME_ENG": "Ca Mau"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.7, 8.6], [105.6, 8.6], [105.6, 9.6], [104.7, 9.6], [104.7, 8.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Cao Bằng",
+        "NAME_ENG": "Cao Bang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.8, 22.2], [106.8, 22.2], [106.8, 23.0], [105.8, 23.0], [105.8, 22.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Đắk Lắk",
+        "NAME_ENG": "Dak Lak"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.7, 12.2], [108.8, 12.2], [108.8, 13.2], [107.7, 13.2], [107.7, 12.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Đắk Nông",
+        "NAME_ENG": "Dak Nong"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.2, 11.8], [108.1, 11.8], [108.1, 12.7], [107.2, 12.7], [107.2, 11.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Điện Biên",
+        "NAME_ENG": "Dien Bien"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[102.8, 21.4], [103.7, 21.4], [103.7, 22.2], [102.8, 22.2], [102.8, 21.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Đồng Nai",
+        "NAME_ENG": "Dong Nai"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.7, 10.6], [107.6, 10.6], [107.6, 11.5], [106.7, 11.5], [106.7, 10.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Đồng Tháp",
+        "NAME_ENG": "Dong Thap"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.3, 10.2], [106.1, 10.2], [106.1, 10.8], [105.3, 10.8], [105.3, 10.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Gia Lai",
+        "NAME_ENG": "Gia Lai"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.6, 13.2], [108.6, 13.2], [108.6, 14.4], [107.6, 14.4], [107.6, 13.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hà Giang",
+        "NAME_ENG": "Ha Giang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.4, 22.3], [105.6, 22.3], [105.6, 23.4], [104.4, 23.4], [104.4, 22.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hà Nam",
+        "NAME_ENG": "Ha Nam"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.7, 20.3], [106.2, 20.3], [106.2, 20.8], [105.7, 20.8], [105.7, 20.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hà Tĩnh",
+        "NAME_ENG": "Ha Tinh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.4, 17.9], [106.4, 17.9], [106.4, 18.7], [105.4, 18.7], [105.4, 17.9]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hải Dương",
+        "NAME_ENG": "Hai Duong"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.0, 20.7], [106.7, 20.7], [106.7, 21.2], [106.0, 21.2], [106.0, 20.7]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hậu Giang",
+        "NAME_ENG": "Hau Giang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.3, 9.5], [106.0, 9.5], [106.0, 10.0], [105.3, 10.0], [105.3, 9.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hòa Bình",
+        "NAME_ENG": "Hoa Binh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.9, 20.2], [105.8, 20.2], [105.8, 21.1], [104.9, 21.1], [104.9, 20.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Hưng Yên",
+        "NAME_ENG": "Hung Yen"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.8, 20.4], [106.4, 20.4], [106.4, 20.9], [105.8, 20.9], [105.8, 20.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Khánh Hòa",
+        "NAME_ENG": "Khanh Hoa"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[108.7, 11.8], [109.5, 11.8], [109.5, 12.7], [108.7, 12.7], [108.7, 11.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Kiên Giang",
+        "NAME_ENG": "Kien Giang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.4, 9.3], [105.8, 9.3], [105.8, 10.8], [104.4, 10.8], [104.4, 9.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Kon Tum",
+        "NAME_ENG": "Kon Tum"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.5, 13.9], [108.5, 13.9], [108.5, 14.8], [107.5, 14.8], [107.5, 13.9]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Lai Châu",
+        "NAME_ENG": "Lai Chau"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[103.0, 22.0], [103.9, 22.0], [103.9, 22.8], [103.0, 22.8], [103.0, 22.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Lâm Đồng",
+        "NAME_ENG": "Lam Dong"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.7, 11.1], [108.7, 11.1], [108.7, 12.0], [107.7, 12.0], [107.7, 11.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Lạng Sơn",
+        "NAME_ENG": "Lang Son"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.4, 21.4], [107.2, 21.4], [107.2, 22.4], [106.4, 22.4], [106.4, 21.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Lào Cai",
+        "NAME_ENG": "Lao Cai"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[103.5, 22.1], [104.4, 22.1], [104.4, 22.9], [103.5, 22.9], [103.5, 22.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Long An",
+        "NAME_ENG": "Long An"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.9, 10.4], [106.8, 10.4], [106.8, 11.0], [105.9, 11.0], [105.9, 10.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Nam Định",
+        "NAME_ENG": "Nam Dinh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.9, 20.1], [106.5, 20.1], [106.5, 20.7], [105.9, 20.7], [105.9, 20.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Nghệ An",
+        "NAME_ENG": "Nghe An"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.1, 18.5], [106.2, 18.5], [106.2, 19.9], [104.1, 19.9], [104.1, 18.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Ninh Bình",
+        "NAME_ENG": "Ninh Binh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.7, 20.0], [106.3, 20.0], [106.3, 20.5], [105.7, 20.5], [105.7, 20.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Ninh Thuận",
+        "NAME_ENG": "Ninh Thuan"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[108.5, 11.3], [109.3, 11.3], [109.3, 12.0], [108.5, 12.0], [108.5, 11.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Phú Thọ",
+        "NAME_ENG": "Phu Tho"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.9, 21.0], [105.5, 21.0], [105.5, 21.6], [104.9, 21.6], [104.9, 21.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Phú Yên",
+        "NAME_ENG": "Phu Yen"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[108.7, 12.8], [109.5, 12.8], [109.5, 13.5], [108.7, 13.5], [108.7, 12.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Quảng Bình",
+        "NAME_ENG": "Quang Binh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.9, 17.1], [106.8, 17.1], [106.8, 18.1], [105.9, 18.1], [105.9, 17.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Quảng Nam",
+        "NAME_ENG": "Quang Nam"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.4, 15.0], [108.7, 15.0], [108.7, 16.0], [107.4, 16.0], [107.4, 15.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Quảng Ngãi",
+        "NAME_ENG": "Quang Ngai"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[108.4, 14.7], [109.2, 14.7], [109.2, 15.6], [108.4, 15.6], [108.4, 14.7]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Quảng Ninh",
+        "NAME_ENG": "Quang Ninh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.8, 20.5], [108.0, 20.5], [108.0, 21.5], [106.8, 21.5], [106.8, 20.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Quảng Trị",
+        "NAME_ENG": "Quang Tri"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.6, 16.4], [107.4, 16.4], [107.4, 17.2], [106.6, 17.2], [106.6, 16.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Sóc Trăng",
+        "NAME_ENG": "Soc Trang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.6, 9.3], [106.3, 9.3], [106.3, 9.9], [105.6, 9.9], [105.6, 9.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Sơn La",
+        "NAME_ENG": "Son La"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[103.4, 20.8], [104.5, 20.8], [104.5, 21.8], [103.4, 21.8], [103.4, 20.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Tây Ninh",
+        "NAME_ENG": "Tay Ninh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.8, 11.0], [106.7, 11.0], [106.7, 11.7], [105.8, 11.7], [105.8, 11.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Thái Bình",
+        "NAME_ENG": "Thai Binh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.1, 20.2], [106.6, 20.2], [106.6, 20.7], [106.1, 20.7], [106.1, 20.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Thái Nguyên",
+        "NAME_ENG": "Thai Nguyen"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.5, 21.2], [106.2, 21.2], [106.2, 21.9], [105.5, 21.9], [105.5, 21.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Thanh Hóa",
+        "NAME_ENG": "Thanh Hoa"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.1, 19.2], [106.4, 19.2], [106.4, 20.4], [105.1, 20.4], [105.1, 19.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Thừa Thiên Huế",
+        "NAME_ENG": "Thua Thien Hue"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[107.2, 16.1], [107.9, 16.1], [107.9, 16.8], [107.2, 16.8], [107.2, 16.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Tiền Giang",
+        "NAME_ENG": "Tien Giang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.0, 10.2], [106.7, 10.2], [106.7, 10.7], [106.0, 10.7], [106.0, 10.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Trà Vinh",
+        "NAME_ENG": "Tra Vinh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.0, 9.7], [106.7, 9.7], [106.7, 10.2], [106.0, 10.2], [106.0, 9.7]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Tuyên Quang",
+        "NAME_ENG": "Tuyen Quang"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.9, 21.5], [105.6, 21.5], [105.6, 22.1], [104.9, 22.1], [104.9, 21.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Vĩnh Long",
+        "NAME_ENG": "Vinh Long"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.7, 10.0], [106.3, 10.0], [106.3, 10.5], [105.7, 10.5], [105.7, 10.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Vĩnh Phúc",
+        "NAME_ENG": "Vinh Phuc"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.3, 21.1], [105.8, 21.1], [105.8, 21.6], [105.3, 21.6], [105.3, 21.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME_1": "Yên Bái",
+        "NAME_ENG": "Yen Bai"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.6, 21.4], [105.2, 21.4], [105.2, 22.0], [104.6, 22.0], [104.6, 21.4]]]
+      }
+    }
+  ]
+} 

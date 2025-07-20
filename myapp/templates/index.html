@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Dự báo Di cư</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <!-- Leaflet for single province view -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+        crossorigin=""/>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+</head>
+<body>
+  <div class="main-container">
+    <a href="{{ url_for('info') }}" class="info-btn">ℹ️ Thông tin dự án</a>
+    
+    <h1>📈 Phân tích Tỷ lệ Di cư Việt Nam</h1>
+    
+    <div class="toggle-container">
+      <button id="single-mode-btn" class="toggle-btn active">🔍 Dự đoán đơn lẻ (2025-2030)</button>
+      <button id="map-mode-btn" class="toggle-btn">🗺️ Bản đồ tổng quan (2004-2030)</button>
+      <button id="table-mode-btn" class="toggle-btn">📊 Bảng tỷ lệ di cư (2004-2030)</button>
+    </div>
+
+    <div id="single-mode" class="content-wrapper">
+      <div class="left-panel">
+        <div class="form-container">
+          <h3>🔮 Thiết lập Dự đoán</h3>
+          <form id="predict-form">
+            <label>Tỉnh/Thành phố:</label>
+            <select id="province">
+              {% for p in provinces %}
+                <option>{{ p }}</option>
+              {% endfor %}
+            </select>
+
+            <label>Năm dự đoán:</label>
+            <select id="year">
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2030</option>
+            </select>
+
+            <!-- Removed the submit button -->
+          </form>
+
+          <div id="result" style="display:none;">
+            <h2>Dự báo 📊</h2>
+            <p id="prediction"></p>
+            <div id="trend-text"></div>
+            <h3>📚 Dữ liệu liên quan:</h3>
+            <div id="explanation"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="map-container">
+          <h3>🗺️ Bản đồ Việt Nam</h3>
+          <div id="map"></div>
+          <p class="map-info">Chọn tỉnh/thành phố để xem vị trí trên bản đồ</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="map-mode" class="content-wrapper" style="display:none;">
+      <div class="map-container">
+        <div class="svg-map-container" id="svg-map-container">
+          <div class="map-header">
+            <h3>🗺️ Bản đồ Tỷ suất Di Cư Việt Nam</h3>
+            <div class="year-selector-container">
+              <label for="map-year">Năm:</label>
+              <select id="map-year" class="year-selector">
+                <option value="2004">2004</option>
+                <option value="2005">2005</option>
+                <option value="2006">2006</option>
+                <option value="2007">2007</option>
+                <option value="2008">2008</option>
+                <option value="2009">2009</option>
+                <option value="2010">2010</option>
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+                <option value="2015">2015</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+              </select>
+            </div>
+          </div>
+          <div id="svg-map-content">
+            <p style="text-align: center; color: #007acc; margin: 40px 0;">🔄 Đang tải bản đồ SVG...</p>
+          </div>
+        </div>
+        <p class="map-info">Nhấp vào tỉnh/thành phố để xem thông tin chi tiết. Thay đổi năm để cập nhật dự báo.</p>
+      </div>
+    </div>
+
+    <div id="table-mode" class="content-wrapper" style="display:none;">
+      <div class="table-controls">
+        <div class="controls-container">
+          <label>Năm:</label>
+          <select id="table-year">
+            <option value="2004">2004</option>
+            <option value="2005">2005</option>
+            <option value="2006">2006</option>
+            <option value="2007">2007</option>
+            <option value="2008">2008</option>
+            <option value="2009">2009</option>
+            <option value="2010">2010</option>
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024" selected>2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+          </select>
+          <button id="update-table-btn">🔄 Cập nhật bảng</button>
+          <button id="export-table-btn">📥 Xuất Excel</button>
+        </div>
+        <div class="table-summary" id="table-summary" style="display:none;">
+          <h3>📊 Tóm tắt thống kê:</h3>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Tổng số tỉnh:</span>
+              <span class="summary-value" id="total-provinces">-</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Tỷ lệ di cư trung bình:</span>
+              <span class="summary-value" id="avg-migration">-</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Tỷ lệ cao nhất:</span>
+              <span class="summary-value" id="max-migration">-</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Tỷ lệ thấp nhất:</span>
+              <span class="summary-value" id="min-migration">-</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Tỉnh di cư vào:</span>
+              <span class="summary-value" id="positive-count">-</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Tỉnh di cư ra:</span>
+              <span class="summary-value" id="negative-count">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <h3>📋 Bảng Tỷ lệ Di cư Tất cả Tỉnh/Thành phố</h3>
+        <div class="table-search">
+          <input type="text" id="search-province" placeholder="🔍 Tìm kiếm tỉnh/thành phố...">
+          <select id="filter-trend">
+            <option value="">Tất cả xu hướng</option>
+            <option value="Nhập cư rất mạnh">Nhập cư rất mạnh</option>
+            <option value="Nhập cư mạnh">Nhập cư mạnh</option>
+            <option value="Nhập cư vừa">Nhập cư vừa</option>
+            <option value="Nhập cư nhẹ">Nhập cư nhẹ</option>
+            <option value="Nhập cư rất nhẹ">Nhập cư rất nhẹ</option>
+            <option value="Cân bằng">Cân bằng</option>
+            <option value="Xuất cư rất nhẹ">Xuất cư rất nhẹ</option>
+            <option value="Xuất cư nhẹ">Xuất cư nhẹ</option>
+            <option value="Xuất cư vừa">Xuất cư vừa</option>
+            <option value="Xuất cư mạnh">Xuất cư mạnh</option>
+            <option value="Xuất cư rất mạnh">Xuất cư rất mạnh</option>
+          </select>
+        </div>
+        <div id="migration-table-container">
+          <p style="text-align: center; color: #666; margin: 40px 0;">Nhấn "Cập nhật bảng" để hiển thị dữ liệu</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Frontend Caching System - Optimized Version
+    class FrontendCache {
+      constructor(storageType = 'localStorage', defaultTTL = 3600000, maxItems = 50) { 
+        this.storage = window[storageType];
+        this.defaultTTL = defaultTTL;
+        this.cachePrefix = 'migration_app_cache_';
+        this.maxItems = maxItems;
+      }
+      
+      set(key, value, ttl = null) {
+        const expiry = Date.now() + (ttl || this.defaultTTL);
+        const cacheData = {
+          value: value,
+          expiry: expiry,
+          timestamp: Date.now(),
+          accessCount: 1
+        };
+        
+        try {
+          // Clean up expired items first to make space
+          this.cleanupExpired();
+          
+          // If still at max capacity, remove oldest items
+          if (this.size() >= this.maxItems) {
+            this.removeOldest();
+          }
+          
+          const cacheKey = this.cachePrefix + key;
+          this.storage.setItem(cacheKey, JSON.stringify(cacheData));
+          
+          console.log(`💾 Cached: ${key.substring(0, 30)}... (TTL: ${Math.round((ttl || this.defaultTTL)/60000)}min)`);
+          return true;
+        } catch (e) {
+          console.warn(`❌ Cache storage failed for ${key}:`, e.message);
+          // Try to make space by removing half the cache
+          this.clearOldItems(Math.floor(this.maxItems / 2));
+          try {
+            const cacheKey = this.cachePrefix + key;
+            this.storage.setItem(cacheKey, JSON.stringify(cacheData));
+            console.log(`💾 Cached after cleanup: ${key.substring(0, 30)}...`);
+            return true;
+          } catch (e2) {
+            console.warn(`❌ Cache storage still failed after cleanup:`, e2.message);
+            return false;
+          }
+        }
+      }
+      
+      get(key) {
+        try {
+          const cacheKey = this.cachePrefix + key;
+          const cached = this.storage.getItem(cacheKey);
+          if (!cached) return null;
+          
+          const cacheData = JSON.parse(cached);
+          
+          // Check if expired
+          if (Date.now() > cacheData.expiry) {
+            this.remove(key);
+            return null;
+          }
+          
+          // Update access count and timestamp for LRU
+          cacheData.accessCount = (cacheData.accessCount || 0) + 1;
+          cacheData.lastAccess = Date.now();
+          this.storage.setItem(cacheKey, JSON.stringify(cacheData));
+          
+          console.log(`🎯 Cache HIT: ${key.substring(0, 30)}... (age: ${Math.round((Date.now() - cacheData.timestamp)/60000)}min)`);
+          return cacheData.value;
+        } catch (e) {
+          console.warn(`❌ Cache retrieval failed for ${key}:`, e.message);
+          return null;
+        }
+      }
+      
+      remove(key) {
+        try {
+          const cacheKey = this.cachePrefix + key;
+          this.storage.removeItem(cacheKey);
+        } catch (e) {
+          console.warn(`❌ Cache removal failed for ${key}:`, e.message);
+        }
+      }
+      
+      cleanupExpired() {
+        try {
+          const keys = [];
+          for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key && key.startsWith(this.cachePrefix)) {
+              const cached = this.storage.getItem(key);
+              if (cached) {
+                try {
+                  const cacheData = JSON.parse(cached);
+                  if (Date.now() > cacheData.expiry) {
+                    keys.push(key);
+                  }
+                } catch (e) {
+                  keys.push(key); // Remove corrupted entries
+                }
+              }
+            }
+          }
+          keys.forEach(key => this.storage.removeItem(key));
+          if (keys.length > 0) {
+            console.log(`🧹 Cleaned up ${keys.length} expired cache items`);
+          }
+        } catch (e) {
+          console.warn('❌ Cache cleanup failed:', e.message);
+        }
+      }
+      
+      removeOldest() {
+        try {
+          const items = [];
+          for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key && key.startsWith(this.cachePrefix)) {
+              const cached = this.storage.getItem(key);
+              if (cached) {
+                try {
+                  const cacheData = JSON.parse(cached);
+                  items.push({
+                    key: key,
+                    timestamp: cacheData.timestamp || 0,
+                    lastAccess: cacheData.lastAccess || cacheData.timestamp || 0,
+                    accessCount: cacheData.accessCount || 1
+                  });
+                } catch (e) {
+                  // Remove corrupted items
+                  this.storage.removeItem(key);
+                }
+              }
+            }
+          }
+          
+          // Sort by last access time (oldest first)
+          items.sort((a, b) => a.lastAccess - b.lastAccess);
+          
+          // Remove oldest 25% of items
+          const toRemove = Math.max(1, Math.floor(items.length * 0.25));
+          for (let i = 0; i < toRemove; i++) {
+            this.storage.removeItem(items[i].key);
+          }
+          
+          console.log(`🧹 Removed ${toRemove} oldest cache items to make space`);
+        } catch (e) {
+          console.warn('❌ Remove oldest failed:', e.message);
+        }
+      }
+      
+      clearOldItems(count) {
+        try {
+          if (count <= 0) return; // Don't clear if count is 0 or negative
+          
+          const items = [];
+          for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key && key.startsWith(this.cachePrefix)) {
+              const cached = this.storage.getItem(key);
+              if (cached) {
+                try {
+                  const cacheData = JSON.parse(cached);
+                  items.push({
+                    key: key,
+                    lastAccess: cacheData.lastAccess || cacheData.timestamp || 0
+                  });
+                } catch (e) {
+                  this.storage.removeItem(key);
+                }
+              }
+            }
+          }
+          
+          items.sort((a, b) => a.lastAccess - b.lastAccess);
+          
+          const toRemove = Math.min(count, items.length);
+          for (let i = 0; i < toRemove; i++) {
+            this.storage.removeItem(items[i].key);
+          }
+          
+          console.log(`🧹 Cleared ${toRemove} old cache items`);
+        } catch (e) {
+          console.warn('❌ Clear old items failed:', e.message);
+        }
+      }
+      
+      clear() {
+        try {
+          const keys = [];
+          for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key && key.startsWith(this.cachePrefix)) {
+              keys.push(key);
+            }
+          }
+          keys.forEach(key => this.storage.removeItem(key));
+          console.log(`🧹 Cleared ${keys.length} cache items`);
+        } catch (e) {
+          console.warn('❌ Cache clear failed:', e.message);
+        }
+      }
+      
+      size() {
+        let count = 0;
+        try {
+          for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key && key.startsWith(this.cachePrefix)) {
+              count++;
+            }
+          }
+        } catch (e) {
+          console.warn('❌ Cache size calculation failed:', e.message);
+        }
+        return count;
+      }
+      
+      getStats() {
+        let totalSize = 0;
+        let validItems = 0;
+        let expiredItems = 0;
+        
+        try {
+          for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key && key.startsWith(this.cachePrefix)) {
+              const cached = this.storage.getItem(key);
+              if (cached) {
+                totalSize += cached.length;
+                try {
+                  const cacheData = JSON.parse(cached);
+                  if (Date.now() > cacheData.expiry) {
+                    expiredItems++;
+                  } else {
+                    validItems++;
+                  }
+                } catch (e) {
+                  expiredItems++;
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('❌ Cache stats calculation failed:', e.message);
+        }
+        
+        return {
+          totalSize: totalSize,
+          validItems: validItems,
+          expiredItems: expiredItems,
+          totalItems: validItems + expiredItems,
+          maxItems: this.maxItems
+        };
+      }
+    }
+
+    // Initialize cache instances - Unlimited SVG caching with smart management
+    const apiCache = new FrontendCache('localStorage', 1800000, 100); // 30 minutes, max 100 items (small API responses)
+    const svgCache = new FrontendCache('sessionStorage', 7200000, 50); // 2 hours, max 50 SVG maps (27 years worth)
+    const tableCache = new FrontendCache('localStorage', 3600000, 50); // 1 hour, max 50 items (table data)
+
+    // Enhanced API call with smart SVG caching
+    async function cachedFetch(url, options = {}, cacheKey = null, cacheInstance = apiCache, ttl = null) {
+      const startTime = performance.now();
+      
+      // Smart caching for SVG maps
+      if (url.includes('/svg-map/')) {
+        const year = url.split('/').pop();
+        const svgCacheKey = `svg_map_${year}`;
+        
+        // Try cache first
+        const cached = svgCache.get(svgCacheKey);
+        if (cached !== null) {
+          const loadTime = performance.now() - startTime;
+          console.log(`🎯 SVG Cache HIT: ${year} (age: ${Math.round((Date.now() - cached.timestamp)/60000)}min)`);
+          return {
+            json: () => Promise.resolve(cached),
+            text: () => Promise.resolve(cached),
+            ok: true,
+            fromCache: true,
+            loadTime: loadTime
+          };
+        }
+        
+        console.log(`🌐 SVG API call: ${url}`);
+        try {
+          const response = await fetch(url, options);
+          const loadTime = performance.now() - startTime;
+          
+          if (response.ok) {
+            let data = await response.text();
+            
+            // Simple SVG compression
+            const originalSize = data.length;
+            data = data.replace(/\s+/g, ' ').replace(/>\s+</g, '><').trim();
+            const compressedSize = data.length;
+            const compressionRatio = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+            
+            console.log(`🗜️ SVG compressed: ${(originalSize/1024).toFixed(1)}KB → ${(compressedSize/1024).toFixed(1)}KB (${compressionRatio}% reduction)`);
+            
+            // Smart caching with proactive cleanup (2MB threshold)
+            try {
+              // Clear expired items first
+              svgCache.cleanupExpired();
+              
+              // Check storage usage BEFORE caching
+              const storageUsed = (() => {
+                let used = 0;
+                for (let i = 0; i < sessionStorage.length; i++) {
+                  const key = sessionStorage.key(i);
+                  if (key && key.startsWith('migration_app_cache_')) {
+                    const item = sessionStorage.getItem(key);
+                    if (item) used += item.length;
+                  }
+                }
+                return used;
+              })();
+              
+              const storageUsedMB = (storageUsed / (1024 * 1024)).toFixed(1);
+              const estimatedNewSize = storageUsed + compressedSize;
+              const estimatedNewSizeMB = (estimatedNewSize / (1024 * 1024)).toFixed(1);
+              
+              console.log(`📊 Storage: ${storageUsedMB}MB, after adding: ${estimatedNewSizeMB}MB`);
+              
+              // Proactive cleanup: If adding this item would exceed 3MB, cleanup first
+              if (estimatedNewSize > 3 * 1024 * 1024) {
+                const itemsToRemove = Math.max(1, Math.ceil(svgCache.size() * 0.4)); // Remove 40% oldest
+                console.log(`🧹 Proactive cleanup: removing ${itemsToRemove} oldest SVG maps`);
+                svgCache.clearOldItems(itemsToRemove);
+              }
+              
+              // Also cleanup if current storage > 2MB
+              if (storageUsed > 2 * 1024 * 1024) {
+                const itemsToRemove = Math.ceil(svgCache.size() * 0.3); // Remove 30% oldest
+                console.log(`🧹 Storage at ${storageUsedMB}MB, removing ${itemsToRemove} oldest SVG maps`);
+                svgCache.clearOldItems(itemsToRemove);
+              }
+              
+              // Cache the SVG
+              const cacheSuccess = svgCache.set(svgCacheKey, data, ttl);
+              
+              if (cacheSuccess) {
+                console.log(`💾 SVG cached successfully (${loadTime.toFixed(1)}ms) - Total cached: ${svgCache.size()}`);
+              } else {
+                console.warn(`⚠️ SVG cache failed, aggressive cleanup...`);
+                // Emergency cleanup - keep only 1 most recent
+                svgCache.clearOldItems(svgCache.size() - 1);
+                const retrySuccess = svgCache.set(svgCacheKey, data, ttl);
+                if (retrySuccess) {
+                  console.log(`💾 SVG cached after emergency cleanup - Total cached: ${svgCache.size()}`);
+                } else {
+                  console.warn(`❌ SVG cache completely failed, will fetch fresh each time`);
+                }
+              }
+            } catch (e) {
+              console.warn(`⚠️ SVG caching error: ${e.message}`);
+            }
+            
+            return {
+              json: () => Promise.resolve(data),
+              text: () => Promise.resolve(data),
+              ok: true,
+              fromCache: false,
+              status: response.status,
+              loadTime: loadTime
+            };
+          } else {
+            return response;
+          }
+        } catch (error) {
+          console.error('❌ SVG API call failed:', error);
+          throw error;
+        }
+      }
+      
+      // Normal caching for other APIs (predictions, tables)
+      // Generate consistent cache key
+      if (!cacheKey) {
+        const method = options.method || 'GET';
+        const body = options.body || '';
+        cacheKey = `${method}_${url}_${btoa(body).substring(0, 20)}`;
+      }
+      
+      // Normalize cache key to avoid inconsistencies
+      cacheKey = cacheKey.replace(/[^a-zA-Z0-9_-]/g, '_');
+      
+      // Try to get from cache first
+      const cached = cacheInstance.get(cacheKey);
+      if (cached !== null) {
+        const loadTime = performance.now() - startTime;
+        return {
+          json: () => Promise.resolve(cached),
+          text: () => Promise.resolve(typeof cached === 'string' ? cached : JSON.stringify(cached)),
+          ok: true,
+          fromCache: true,
+          loadTime: loadTime
+        };
+      }
+      
+      console.log(`🌐 API call: ${url} (key: ${cacheKey.substring(0, 30)}...)`);
+      
+      try {
+        const response = await fetch(url, options);
+        const loadTime = performance.now() - startTime;
+        
+        if (response.ok) {
+          let data;
+          const contentType = response.headers.get('content-type');
+          
+          if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+          } else {
+            data = await response.text();
+          }
+          
+          // Cache the successful response
+          cacheInstance.set(cacheKey, data, ttl);
+          
+          console.log(`✅ API response cached (${loadTime.toFixed(1)}ms)`);
+          
+          return {
+            json: () => Promise.resolve(data),
+            text: () => Promise.resolve(typeof data === 'string' ? data : JSON.stringify(data)),
+            ok: true,
+            fromCache: false,
+            status: response.status,
+            loadTime: loadTime
+          };
+        } else {
+          return response;
+        }
+      } catch (error) {
+        console.error('❌ API call failed:', error);
+        throw error;
+      }
+    }
+
+    // Cache cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+      // Clean up expired items before closing
+      const stats = apiCache.getStats();
+      if (stats.expiredItems > 0) {
+        console.log(`🧹 Cleaning up ${stats.expiredItems} expired cache items`);
+        // Remove expired items
+        try {
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('migration_app_cache_')) {
+              const cached = localStorage.getItem(key);
+              if (cached) {
+                try {
+                  const cacheData = JSON.parse(cached);
+                  if (Date.now() > cacheData.expiry) {
+                    localStorage.removeItem(key);
+                  }
+                } catch (e) {
+                  localStorage.removeItem(key);
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Cache cleanup failed:', e);
+        }
+      }
+    });
+
+    // Storage monitoring and cleanup
+    function monitorStorage() {
+      try {
+        let localStorageUsed = 0;
+        let sessionStorageUsed = 0;
+        let migrationCacheSize = 0;
+        let svgCacheSize = 0;
+        
+        // Check localStorage
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key) {
+            const item = localStorage.getItem(key);
+            if (item) {
+              localStorageUsed += item.length;
+              if (key.startsWith('migration_app_cache_')) {
+                migrationCacheSize += item.length;
+              }
+            }
+          }
+        }
+        
+        // Check sessionStorage  
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key) {
+            const item = sessionStorage.getItem(key);
+            if (item) {
+              sessionStorageUsed += item.length;
+              if (key.startsWith('migration_app_cache_')) {
+                svgCacheSize += item.length;
+              }
+            }
+          }
+        }
+        
+        const localUsedMB = (localStorageUsed / (1024 * 1024)).toFixed(2);
+        const sessionUsedMB = (sessionStorageUsed / (1024 * 1024)).toFixed(2);
+        const cacheUsedMB = (migrationCacheSize / (1024 * 1024)).toFixed(2);
+        const svgUsedMB = (svgCacheSize / (1024 * 1024)).toFixed(2);
+        const localUsagePercent = ((localStorageUsed / (5 * 1024 * 1024)) * 100).toFixed(1);
+        const sessionUsagePercent = ((sessionStorageUsed / (5 * 1024 * 1024)) * 100).toFixed(1);
+        
+        console.log(`💾 Storage Usage:`);
+        console.log(`  📁 localStorage: ${localUsedMB}MB (${localUsagePercent}% of 5MB limit)`);
+        console.log(`  📂 sessionStorage: ${sessionUsedMB}MB (${sessionUsagePercent}% of 5MB limit)`);
+        console.log(`  🎯 API Cache: ${cacheUsedMB}MB`);
+        console.log(`  🗺️ SVG Cache: ${svgUsedMB}MB`);
+        
+        // Auto cleanup if usage is high
+        if (localStorageUsed > 4 * 1024 * 1024) { // > 4MB
+          console.log('⚠️ localStorage usage high, triggering cleanup...');
+          apiCache.cleanupExpired();
+          tableCache.cleanupExpired();
+        }
+        
+        if (sessionStorageUsed > 2 * 1024 * 1024) { // > 2MB (reduced threshold)
+          console.log('⚠️ sessionStorage usage high, triggering SVG cleanup...');
+          svgCache.cleanupExpired();
+          if (sessionStorageUsed > 3 * 1024 * 1024) { // > 3MB
+            svgCache.clearOldItems(Math.ceil(svgCache.size() * 0.5)); // Remove 50% oldest
+          }
+        }
+        
+        return {
+          localUsedMB: localUsedMB,
+          sessionUsedMB: sessionUsedMB,
+          cacheUsedMB: cacheUsedMB,
+          svgUsedMB: svgUsedMB,
+          localUsagePercent: localUsagePercent,
+          sessionUsagePercent: sessionUsagePercent
+        };
+      } catch (e) {
+        console.warn('❌ Storage monitoring failed:', e);
+        return null;
+      }
+    }
+
+    // Display cache stats (for debugging)
+    function showCacheStats() {
+      const apiStats = apiCache.getStats();
+      const svgStats = svgCache.getStats();
+      const tableStats = tableCache.getStats();
+      
+      console.log('📊 Cache Statistics:');
+      console.log('API Cache (localStorage):', {
+        ...apiStats,
+        ttl: '30 minutes'
+      });
+      console.log('SVG Cache (sessionStorage):', {
+        ...svgStats,
+        ttl: '2 hours',
+        note: 'Max 50 items, clears on tab close'
+      });
+      console.log('Table Cache (localStorage):', {
+        ...tableStats,
+        ttl: '1 hour'
+      });
+      
+      const totalValid = apiStats.validItems + svgStats.validItems + tableStats.validItems;
+      const totalExpired = apiStats.expiredItems + svgStats.expiredItems + tableStats.expiredItems;
+      const totalSize = apiStats.totalSize + svgStats.totalSize + tableStats.totalSize;
+      
+      console.log('📈 Total Summary:', {
+        validItems: totalValid,
+        expiredItems: totalExpired,
+        totalItems: totalValid + totalExpired,
+        totalSize: `${(totalSize / 1024).toFixed(2)} KB`
+      });
+      
+      // Show detailed storage info
+      const storageInfo = monitorStorage();
+      if (storageInfo) {
+        console.log('💾 Detailed Storage:', storageInfo);
+      }
+      
+      // Auto cleanup if there are expired items
+      if (totalExpired > 0) {
+        console.log(`🧹 Found ${totalExpired} expired items, cleaning up...`);
+        apiCache.cleanupExpired();
+        svgCache.cleanupExpired();
+        tableCache.cleanupExpired();
+      }
+    }
+    
+    // Manual cache cleanup with storage monitoring
+    window.cleanupCache = function() {
+      console.log('🧹 Starting manual cache cleanup...');
+      monitorStorage();
+      
+      apiCache.cleanupExpired();
+      svgCache.cleanupExpired();
+      tableCache.cleanupExpired();
+      
+      console.log('✅ Manual cache cleanup completed');
+      showCacheStats();
+    };
+    
+    // Add cache stats to console (for debugging)
+    window.showCacheStats = showCacheStats;
+    window.monitorStorage = monitorStorage;
+
+    // Clear all frontend caches
+    window.clearFrontendCache = function() {
+      console.log('🧹 Clearing all frontend caches...');
+      monitorStorage();
+      
+      apiCache.clear();
+      svgCache.clear();
+      tableCache.clear();
+      
+      console.log('✅ All frontend caches cleared');
+      showCacheStats();
+    };
+
+    // Leaflet map for single mode
+    const map = L.map('map').setView([16.0, 106.0], 6);
+    let currentMarker = null;
+    let currentCircle = null;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const provinceCoords = {
+      'An Giang': [10.5216, 105.1258],
+      'Bà Rịa - Vũng Tàu': [10.5417, 107.2431],
+      'Bắc Giang': [21.2731, 106.1946],
+      'Bắc Kạn': [22.1474, 105.8348],
+      'Bạc Liêu': [9.2945, 105.7244],
+      'Bắc Ninh': [21.1864, 106.0752],
+      'Bến Tre': [10.2433, 106.3756],
+      'Bình Định': [13.7765, 109.2216],
+      'Bình Dương': [11.3254, 106.4775],
+      'Bình Phước': [11.7511, 106.7234],
+      'Bình Thuận': [11.0904, 108.0721],
+      'Cà Mau': [9.1769, 105.1524],
+      'Cần Thơ': [10.0452, 105.7469],
+      'Cao Bằng': [22.6356, 106.2550],
+      'Đà Nẵng': [16.0544, 108.2022],
+      'Đắk Lắk': [12.7100, 108.2378],
+      'Đắk Nông': [12.2646, 107.6098],
+      'Điện Biên': [21.8042, 103.2287],
+      'Đồng Nai': [11.0686, 107.1676],
+      'Đồng Tháp': [10.4938, 105.6881],
+      'Gia Lai': [13.8078, 108.1099],
+      'Hà Giang': [22.8025, 104.9784],
+      'Hà Nam': [20.5835, 105.9230],
+      'Hà Nội': [21.0285, 105.8542],
+      'Hà Tĩnh': [18.2943, 105.8906],
+      'Hải Dương': [20.9373, 106.3148],
+      'Hải Phòng': [20.8449, 106.6881],
+      'Hậu Giang': [9.7571, 105.6412],
+      'Hòa Bình': [20.6861, 105.3131],
+      'Hưng Yên': [20.6464, 106.0512],
+      'Khánh Hòa': [12.2585, 109.0526],
+      'Kiên Giang': [10.0125, 105.0811],
+      'Kon Tum': [14.3497, 108.0005],
+      'Lai Châu': [22.3686, 103.4574],
+      'Lâm Đồng': [11.5753, 108.1429],
+      'Lạng Sơn': [21.8564, 106.7610],
+      'Lào Cai': [22.4856, 103.9707],
+      'Long An': [10.6958, 106.2431],
+      'Nam Định': [20.4388, 106.1621],
+      'Nghệ An': [19.2342, 104.9200],
+      'Ninh Bình': [20.2506, 105.9744],
+      'Ninh Thuận': [11.6739, 108.8629],
+      'Phú Thọ': [21.2685, 105.2045],
+      'Phú Yên': [13.1611, 109.0899],
+      'Quảng Bình': [17.6102, 106.3487],
+      'Quảng Nam': [15.5394, 108.0191],
+      'Quảng Ngãi': [15.1214, 108.8044],
+      'Quảng Ninh': [21.0064, 107.2925],
+      'Quảng Trị': [16.7943, 106.9629],
+      'Sóc Trăng': [9.6036, 105.9802],
+      'Sơn La': [21.3256, 103.9188],
+      'Tây Ninh': [11.3350, 106.1017],
+      'Thái Bình': [20.4463, 106.3365],
+      'Thái Nguyên': [21.5613, 105.8242],
+      'Thanh Hóa': [19.8067, 105.7851],
+      'Thừa Thiên Huế': [16.4637, 107.5909],
+      'Tiền Giang': [10.4493, 106.3420],
+      'TP. Hồ Chí Minh': [10.8231, 106.6297],
+      'Trà Vinh': [9.9477, 106.3256],
+      'Tuyên Quang': [21.7767, 105.2281],
+      'Vĩnh Long': [10.2397, 105.9570],
+      'Vĩnh Phúc': [21.3608, 105.5474],
+      'Yên Bái': [21.7229, 104.8986]
+    };
+
+    // Function to get color for migration rate using red-white-green scheme
+    function getColorForRate(rate) {
+      const value = parseFloat(rate);
+      
+      // Balance threshold
+      if (Math.abs(value) <= 0.1) {  // Updated balance threshold
+        return '#FFFFFF'; // White for balanced
+      } else if (value < 0) {
+        // Out-migration - shades of red
+        const absValue = Math.abs(value);
+        if (absValue <= 5) return '#FF9999';  // Very light red (xuất cư rất nhẹ)
+        else if (absValue <= 10) return '#FF6666'; // Light red (xuất cư nhẹ)
+        else if (absValue <= 15) return '#FF3333'; // Medium red (xuất cư vừa)
+        else if (absValue <= 20) return '#FF0000'; // Red (xuất cư mạnh)
+        else return '#CC0000'; // Dark red (xuất cư rất mạnh)
+      } else {
+        // In-migration - shades of green
+        if (value <= 5) return '#CCFFCC';  // Very light green (nhập cư rất nhẹ)
+        else if (value <= 10) return '#99FF99'; // Light green (nhập cư nhẹ)
+        else if (value <= 15) return '#66FF66'; // Medium green (nhập cư vừa)
+        else if (value <= 20) return '#33FF33'; // Green (nhập cư mạnh)
+        else return '#00CC00'; // Dark green (nhập cư rất mạnh)
+      }
+    }
+
+    // Function to get trend text and color
+    function getTrendInfo(rate) {
+      const value = parseFloat(rate);
+      const color = getColorForRate(rate);
+      
+      let category = '';
+      let trend = '';
+      
+      if (Math.abs(value) <= 0.1) {  // Updated balance threshold
+        category = 'Cân bằng';
+        trend = 'Cân bằng';
+      } else if (value > 0) {
+        if (value > 20) {
+          category = 'Rất mạnh';
+          trend = 'nhập cư rất mạnh';
+        } else if (value > 15) {
+          category = 'Mạnh';
+          trend = 'nhập cư mạnh';
+        } else if (value > 10) {
+          category = 'Vừa';
+          trend = 'nhập cư vừa';
+        } else if (value > 5) {
+          category = 'Nhẹ';
+          trend = 'nhập cư nhẹ';
+        } else if (value > 0.1) {
+          category = 'Rất nhẹ';
+          trend = 'nhập cư rất nhẹ';
+        } else {
+          category = 'Rất nhẹ';
+          trend = 'nhập cư rất nhẹ';
+        }
+      } else {
+        const absValue = Math.abs(value);
+        if (absValue > 20) {
+          category = 'Rất mạnh';
+          trend = 'xuất cư rất mạnh';
+        } else if (absValue > 15) {
+          category = 'Mạnh';
+          trend = 'xuất cư mạnh';
+        } else if (absValue > 10) {
+          category = 'Vừa';
+          trend = 'xuất cư vừa';
+        } else if (absValue > 5) {
+          category = 'Nhẹ';
+          trend = 'xuất cư nhẹ';
+        } else if (absValue > 0.1) {
+          category = 'Rất nhẹ';
+          trend = 'xuất cư rất nhẹ';
+        } else {
+          category = 'Rất nhẹ';
+          trend = 'xuất cư rất nhẹ';
+        }
+      }
+      
+      return { text: trend, color: color, category: category };
+    }
+
+    // Mode switching
+    document.getElementById('single-mode-btn').addEventListener('click', function() {
+      document.getElementById('single-mode').style.display = 'flex';
+      document.getElementById('map-mode').style.display = 'none';
+      document.getElementById('table-mode').style.display = 'none'; // Hide other modes
+      this.classList.add('active');
+      document.getElementById('map-mode-btn').classList.remove('active');
+      document.getElementById('table-mode-btn').classList.remove('active');
+      
+      // Resize map after switching to single mode
+      setTimeout(() => {
+        if (map) {
+          map.invalidateSize();
+        }
+      }, 100);
+    });
+
+    document.getElementById('map-mode-btn').addEventListener('click', function() {
+      document.getElementById('single-mode').style.display = 'none';
+      document.getElementById('map-mode').style.display = 'block';
+      document.getElementById('table-mode').style.display = 'none'; // Hide other modes
+      this.classList.add('active');
+      document.getElementById('single-mode-btn').classList.remove('active');
+      document.getElementById('table-mode-btn').classList.remove('active');
+      
+      // Automatically load SVG map when entering map mode
+      setTimeout(() => {
+        loadSVGMap();
+      }, 100);
+    });
+
+    // Event listener for year changes in map mode
+    document.getElementById('map-year').addEventListener('change', function() {
+      loadSVGMap();
+    });
+
+    document.getElementById('table-mode-btn').addEventListener('click', function() {
+      document.getElementById('single-mode').style.display = 'none';
+      document.getElementById('map-mode').style.display = 'none';
+      document.getElementById('table-mode').style.display = 'block';
+      this.classList.add('active');
+      document.getElementById('single-mode-btn').classList.remove('active');
+      document.getElementById('map-mode-btn').classList.remove('active');
+    });
+
+    // Shared function to load SVG map (no caching due to large file sizes)
+    async function loadSVGMap() {
+      const year = parseInt(document.getElementById('map-year').value);
+      const url = `/api/svg-map/${year}`;
+      
+      try {
+        // Show loading message with progress indicator
+        const svgContent = document.getElementById('svg-map-content');
+        
+        svgContent.innerHTML = `
+          <div style="text-align: center; color: #007acc; padding: 40px;">
+            <div style="font-size: 24px; margin-bottom: 10px;">🔄</div>
+            <div>Đang tải bản đồ SVG cho năm ${year}...</div>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">Vui lòng chờ, file có dung lượng lớn (~1.5MB)</div>
+          </div>
+        `;
+        
+        // Fetch SVG content (no caching due to large size)
+        const response = await cachedFetch(url);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const svgText = await response.text();
+        
+        // Display SVG
+        svgContent.innerHTML = svgText;
+        
+        // Add click handlers to provinces in SVG
+        addSVGProvincesInteractivity();
+        
+      } catch (error) {
+        console.error('❌ Error loading SVG:', error);
+        const svgContent = document.getElementById('svg-map-content');
+        svgContent.innerHTML = `
+          <div style="color: #dc3545; text-align: center; padding: 40px;">
+            <div style="font-size: 24px; margin-bottom: 10px;">❌</div>
+            <div>Lỗi tải bản đồ SVG</div>
+            <div style="font-size: 14px; margin-top: 10px;">${error.message}</div>
+            <button onclick="loadSVGMap()" style="margin-top: 15px; padding: 8px 16px; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+              🔄 Thử lại
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Function to add interactivity to SVG provinces
+    function addSVGProvincesInteractivity() {
+      const svgContent = document.getElementById('svg-map-content');
+      const provinces = svgContent.querySelectorAll('.province');
+      
+      provinces.forEach(province => {
+        // Click handler
+        province.addEventListener('click', async function() {
+          const name = this.getAttribute('data-province');
+          const rate = this.getAttribute('data-rate');
+          const year = document.getElementById('map-year').value;
+          
+          // Get detailed data for this province
+          const cacheKey = `predict_${name}_${year}`;
+          
+          try {
+            const response = await cachedFetch(
+              "/predict",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ province: name, year: parseInt(year) })
+              },
+              cacheKey,
+              apiCache
+            );
+            
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.error) {
+              throw new Error(data.error);
+            }
+            
+            // Log cache status
+            if (response.fromCache) {
+              console.log(`✅ Province ${name} data loaded from cache`);
+            } else {
+              console.log(`🔄 Province ${name} data fetched from server`);
+            }
+            
+            // Create a detailed popup
+            const popup = document.createElement('div');
+            const trendInfo = getTrendInfo(rate);
+            const isHistorical = data.is_historical;
+            const dataType = isHistorical ? "Dữ liệu thực tế" : "Ước tính";
+            
+            popup.innerHTML = `
+              <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+                          background: rgba(0,0,0,0.5); z-index: 10000; 
+                          display: flex; align-items: center; justify-content: center;
+                          backdrop-filter: blur(3px);">
+                <div style="background: white; border-radius: 16px; 
+                            padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+                            max-width: 600px; width: 90%; max-height: 80vh; 
+                            overflow-y: auto; position: relative;
+                            transform: scale(0.9); opacity: 0;
+                            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);"
+                     id="province-popup">
+                  
+                  <!-- Header -->
+                  <div style="background: linear-gradient(135deg, #007acc 0%, #0056b3 100%); 
+                              color: white; padding: 24px; border-radius: 16px 16px 0 0;
+                              position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -50%; right: -50%; 
+                                width: 200px; height: 200px; 
+                                background: rgba(255,255,255,0.1); 
+                                border-radius: 50%; transform: rotate(45deg);"></div>
+                    <h2 style="margin: 0; font-size: 28px; font-weight: 700; 
+                               text-shadow: 0 2px 4px rgba(0,0,0,0.2); position: relative;">
+                      🏙️ ${name}
+                    </h2>
+                    <p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 14px; position: relative;">
+                      ${dataType} năm ${year}
+                    </p>
+                    <button onclick="this.closest('[id=province-popup]').parentElement.remove()" 
+                            style="position: absolute; top: 16px; right: 16px; 
+                                   background: rgba(255,255,255,0.2); border: none; 
+                                   color: white; width: 32px; height: 32px; 
+                                   border-radius: 50%; cursor: pointer; 
+                                   font-size: 18px; font-weight: bold;
+                                   display: flex; align-items: center; justify-content: center;
+                                   transition: all 0.2s ease;">×</button>
+                  </div>
+                  
+                  <!-- Migration Rate -->
+                  <div style="padding: 24px 24px 16px 24px; text-align: center;">
+                    <div style="display: inline-block; padding: 16px 32px; 
+                                background: ${trendInfo.color}; 
+                                border-radius: 12px; border: 3px solid #f0f0f0;
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                      <div style="font-size: 32px; font-weight: 900; 
+                                  color: ${parseFloat(rate) > 0 ? '#1e7e34' : parseFloat(rate) < 0 ? '#dc3545' : '#6c757d'};
+                                  margin-bottom: 4px;">
+                        ${parseFloat(rate) > 0 ? '+' : ''}${rate}‰
+                      </div>
+                      <div style="font-size: 14px; font-weight: 600; 
+                                  color: ${parseFloat(rate) > 0 ? '#1e7e34' : parseFloat(rate) < 0 ? '#dc3545' : '#6c757d'};
+                                  text-transform: uppercase; letter-spacing: 1px;">
+                        ${trendInfo.text}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Trend Analysis -->
+                  <div style="margin: 0 24px 20px 24px; padding: 16px; 
+                              background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); 
+                              border-radius: 12px; border: 1px solid #e9ecef;">
+                    ${data.trend_text}
+                  </div>
+                  
+                  <!-- Detailed Information -->
+                  <div style="padding: 0 24px 24px 24px;">
+                    <h3 style="margin: 0 0 16px 0; color: #007acc; 
+                               font-size: 18px; font-weight: 600;
+                               display: flex; align-items: center; gap: 8px;">
+                      📊 Thông tin chi tiết
+                    </h3>
+                    <div style="background: #f8f9fa; border-radius: 12px; 
+                                padding: 20px; border: 1px solid #e9ecef;">
+                      ${data.explanation}
+                    </div>
+                  </div>
+                  
+                  <!-- Auto-close countdown -->
+                  <div style="position: absolute; bottom: 16px; right: 24px; 
+                              color: #6c757d; font-size: 12px; opacity: 0.7;">
+                    <span id="countdown-text">Tự động đóng sau <span id="countdown">30</span>s</span>
+                  </div>
+                </div>
+              </div>
+            `;
+            
+            document.body.appendChild(popup);
+            
+            // Animate popup appearance
+            setTimeout(() => {
+              const popupElement = popup.querySelector('#province-popup');
+              popupElement.style.transform = 'scale(1)';
+              popupElement.style.opacity = '1';
+            }, 50);
+            
+            // Auto close countdown
+            let countdown = 30;
+            const countdownElement = popup.querySelector('#countdown');
+            const countdownInterval = setInterval(() => {
+              countdown--;
+              if (countdownElement) {
+                countdownElement.textContent = countdown;
+              }
+              
+              if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                // Animate popup disappearance
+                const popupElement = popup.querySelector('#province-popup');
+                if (popupElement) {
+                  popupElement.style.transform = 'scale(0.9)';
+                  popupElement.style.opacity = '0';
+                  setTimeout(() => {
+                    if (popup.parentElement) {
+                      popup.parentElement.removeChild(popup);
+                    }
+                  }, 300);
+                }
+              }
+            }, 1000);
+            
+            // Close on background click
+            popup.addEventListener('click', function(e) {
+              if (e.target === popup) {
+                clearInterval(countdownInterval);
+                const popupElement = popup.querySelector('#province-popup');
+                popupElement.style.transform = 'scale(0.9)';
+                popupElement.style.opacity = '0';
+                setTimeout(() => {
+                  if (popup.parentElement) {
+                    popup.parentElement.removeChild(popup);
+                  }
+                }, 300);
+              }
+            });
+            
+            // Close on Escape key
+            const escapeHandler = function(e) {
+              if (e.key === 'Escape') {
+                clearInterval(countdownInterval);
+                const popupElement = popup.querySelector('#province-popup');
+                if (popupElement) {
+                  popupElement.style.transform = 'scale(0.9)';
+                  popupElement.style.opacity = '0';
+                  setTimeout(() => {
+                    if (popup.parentElement) {
+                      popup.parentElement.removeChild(popup);
+                    }
+                  }, 300);
+                }
+                document.removeEventListener('keydown', escapeHandler);
+              }
+            };
+            document.addEventListener('keydown', escapeHandler);
+            
+          } catch (error) {
+            console.error('Error loading province details:', error);
+            // Show simple error popup
+            const errorPopup = document.createElement('div');
+            errorPopup.innerHTML = `
+              <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                          background: white; border: 2px solid #dc3545; border-radius: 10px; 
+                          padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 10000;
+                          text-align: center; min-width: 300px;">
+                <h3 style="margin: 0 0 10px 0; color: #dc3545;">❌ Lỗi tải dữ liệu</h3>
+                <p style="margin: 5px 0; color: #6c757d;">${error.message}</p>
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        style="margin-top: 10px; background: #dc3545; color: white; border: none; 
+                               padding: 8px 16px; border-radius: 5px; cursor: pointer;">Đóng</button>
+              </div>
+            `;
+            document.body.appendChild(errorPopup);
+            
+            // Auto close error popup after 5 seconds
+            setTimeout(() => {
+              if (errorPopup.parentElement) {
+                errorPopup.parentElement.removeChild(errorPopup);
+              }
+            }, 5000);
+          }
+        });
+        
+        // Hover tooltip (keep the existing simple tooltip)
+        let tooltip = null;
+        
+        province.addEventListener('mouseenter', function(e) {
+          const name = this.getAttribute('data-province');
+          const rate = this.getAttribute('data-rate');
+          const trendInfo = getTrendInfo(rate);
+          
+          tooltip = document.createElement('div');
+          tooltip.style.cssText = `
+            position: fixed;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 10001;
+            max-width: 200px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border: 1px solid ${trendInfo.color};
+          `;
+          
+          tooltip.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 5px;">${name}</div>
+            <div>Tỷ lệ di cư: <span style="color: ${trendInfo.color};">${rate}‰</span></div>
+            <div style="color: ${trendInfo.color}; font-size: 12px; opacity: 0.8;">Nhấn để xem chi tiết</div>
+          `;
+          
+          document.body.appendChild(tooltip);
+          
+          // Position tooltip
+          const updateTooltipPosition = (event) => {
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.top = (event.clientY - 10) + 'px';
+          };
+          
+          updateTooltipPosition(e);
+          province.addEventListener('mousemove', updateTooltipPosition);
+        });
+        
+        province.addEventListener('mouseleave', function() {
+          if (tooltip && tooltip.parentElement) {
+            tooltip.parentElement.removeChild(tooltip);
+            tooltip = null;
+          }
+        });
+      });
+    }
+
+    // Table mode functions
+    let currentTableData = [];
+    
+    async function updateMigrationTable() {
+      const year = parseInt(document.getElementById('table-year').value);
+      const cacheKey = `migration_table_${year}`;
+      
+      try {
+        const response = await cachedFetch(
+          `/api/migration-table/${year}`,
+          {},
+          cacheKey,
+          tableCache
+        );
+        
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        currentTableData = data.data;
+        displayMigrationTable(currentTableData);
+        updateTableSummary(data.summary);
+        
+        // Update table header to show data type
+        const tableHeader = document.querySelector('#table-mode h3');
+        if (tableHeader) {
+          tableHeader.textContent = `📋 Bảng Tỷ lệ Di cư Tất cả Tỉnh/Thành phố - ${data.data_type} ${year}`;
+        }
+        
+      } catch (error) {
+        console.error('❌ Error loading migration table:', error);
+        document.getElementById('migration-table-container').innerHTML = 
+          `<p style="color: #dc3545; text-align: center;">❌ Lỗi tải dữ liệu: ${error.message}</p>`;
+      }
+    }
+    
+    function displayMigrationTable(data) {
+      const container = document.getElementById('migration-table-container');
+      
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666;">Không có dữ liệu</p>';
+        return;
+      }
+      
+      let tableHTML = `
+        <table class="migration-table">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Tỉnh/Thành phố</th>
+              <th>Tỷ lệ di cư (‰)</th>
+              <th>Xu hướng</th>
+              <th>Dân số (tr người)</th>
+              <th>GRDP/người (tr VNĐ)</th>
+              <th>Thu nhập TB (tr VNĐ/tháng)</th>
+              <th>Mật độ dân số (người/km²)</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      data.forEach((item, index) => {
+        const trendColor = item.migration_rate > 0 ? '#28a745' : item.migration_rate < 0 ? '#dc3545' : '#6c757d';
+        const rateColor = item.color;
+        
+        tableHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td class="province-name">${item.province}</td>
+            <td class="migration-rate" style="color: ${trendColor}; font-weight: bold;">
+              ${item.migration_rate > 0 ? '+' : ''}${item.migration_rate}
+            </td>
+            <td class="trend" style="color: ${trendColor};">
+              <span class="trend-indicator" style="background-color: ${rateColor};"></span>
+              ${item.trend}
+            </td>
+            <td class="population" style="text-align: center;">${(item.population/1000).toFixed(3)}</td>
+            <td class="grdp" style="text-align: center;">${item.grdp_per_capita}</td>
+            <td class="income" style="text-align: center;">${item.monthly_income}</td>
+            <td class="density" style="text-align: center;">${item.population_density}</td>
+          </tr>
+        `;
+      });
+      
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+      
+      container.innerHTML = tableHTML;
+    }
+    
+    function updateTableSummary(summary) {
+      document.getElementById('total-provinces').textContent = summary.total_provinces || 0;
+      document.getElementById('avg-migration').textContent = `${summary.avg_migration || 0}‰`;
+      document.getElementById('max-migration').textContent = `${summary.max_migration || 0}‰`;
+      document.getElementById('min-migration').textContent = `${summary.min_migration || 0}‰`;
+      document.getElementById('positive-count').textContent = summary.positive_count || 0;
+      document.getElementById('negative-count').textContent = summary.negative_count || 0;
+      
+      document.getElementById('table-summary').style.display = 'block';
+    }
+    
+    function filterTable() {
+      const searchTerm = document.getElementById('search-province').value.toLowerCase();
+      const trendFilter = document.getElementById('filter-trend').value;
+      
+      let filteredData = currentTableData.filter(item => {
+        const matchesSearch = item.province.toLowerCase().includes(searchTerm);
+        const matchesTrend = !trendFilter || item.trend === trendFilter;
+        return matchesSearch && matchesTrend;
+      });
+      
+      displayMigrationTable(filteredData);
+    }
+    
+    function exportTableToCSV() {
+      if (!currentTableData || currentTableData.length === 0) {
+        alert('Không có dữ liệu để xuất');
+        return;
+      }
+      
+      const year = document.getElementById('table-year').value;
+      const csvContent = [
+        ['STT', 'Tỉnh/Thành phố', 'Tỷ lệ di cư (‰)', 'Xu hướng', 'Dân số (tr người)', 'GRDP/người (tr VNĐ)', 'Thu nhập TB (tr VNĐ/tháng)', 'Mật độ dân số (người/km²)'],
+        ...currentTableData.map((item, index) => [
+          index + 1,
+          item.province,
+          item.migration_rate,
+          item.trend,
+          (item.population/1000).toFixed(3),
+          item.grdp_per_capita,
+          item.monthly_income,
+          item.population_density
+        ])
+      ].map(row => row.join(',')).join('\n');
+      
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `migration_data_${year}.csv`;
+      link.click();
+    }
+    
+    // Event listeners for table mode
+    document.getElementById('update-table-btn').addEventListener('click', updateMigrationTable);
+    document.getElementById('export-table-btn').addEventListener('click', exportTableToCSV);
+    document.getElementById('search-province').addEventListener('input', filterTable);
+    document.getElementById('filter-trend').addEventListener('change', filterTable);
+
+    // Single province highlighting
+    function highlightProvince(provinceName) {
+      if (currentMarker) {
+        map.removeLayer(currentMarker);
+      }
+      if (currentCircle) {
+        map.removeLayer(currentCircle);
+      }
+
+      const coords = provinceCoords[provinceName];
+      if (coords) {
+        currentMarker = L.marker(coords)
+          .addTo(map)
+          .bindPopup(`<b>${provinceName}</b><br>Tỉnh/Thành phố được chọn`)
+          .openPopup();
+
+        currentCircle = L.circle(coords, {
+          color: '#007acc',
+          fillColor: '#007acc',
+          fillOpacity: 0.3,
+          radius: 50000
+        }).addTo(map);
+
+        map.setView(coords, 8);
+      }
+    }
+
+    document.getElementById('province').addEventListener('change', function() {
+      const selectedProvince = this.value;
+      highlightProvince(selectedProvince);
+      // Auto predict when province changes
+      autoPredictMigration();
+    });
+
+    // Add event listener for year changes
+    document.getElementById('year').addEventListener('change', function() {
+      // Auto predict when year changes
+      autoPredictMigration();
+    });
+
+    // Function to automatically predict migration
+    async function autoPredictMigration() {
+      const province = document.getElementById("province").value;
+      const year = parseInt(document.getElementById("year").value);
+
+      if (!province || !year) return;
+
+      // Create consistent cache key - normalize province name and ensure year is integer
+      const normalizedProvince = province.trim().replace(/\s+/g, '_');
+      const cacheKey = `predict_${normalizedProvince}_${year}`;
+
+      try {
+        const response = await cachedFetch(
+          "/predict",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ province: province, year: year }) // Ensure year is integer
+          },
+          cacheKey,
+          apiCache
+        );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        document.getElementById("prediction").innerText = `Tỉ suất di cư thuần: ${data.prediction.toFixed(2)} ‰`;
+        document.getElementById("trend-text").innerHTML = data.trend_text;
+        document.getElementById("explanation").innerHTML = data.explanation;
+        document.getElementById("result").style.display = "block";
+        
+        // Show cache status in console - removed duplicate logs since cachedFetch already logs
+        
+      } catch (error) {
+        console.error('❌ Error predicting migration:', error);
+        document.getElementById("result").style.display = "block";
+        document.getElementById("prediction").innerText = `❌ Lỗi: ${error.message}`;
+        document.getElementById("trend-text").innerHTML = '';
+        document.getElementById("explanation").innerHTML = '';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const firstProvince = document.getElementById('province').value;
+      if (firstProvince) {
+        highlightProvince(firstProvince);
+        // Auto load initial prediction
+        setTimeout(() => {
+          autoPredictMigration();
+        }, 500);
+      }
+      
+      // Initialize map resize observer
+      if (window.ResizeObserver) {
+        const mapContainer = document.getElementById('map');
+        if (mapContainer) {
+          const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+              // Debounce the resize to avoid too many calls
+              clearTimeout(window.mapResizeTimeout);
+              window.mapResizeTimeout = setTimeout(() => {
+                if (map) {
+                  map.invalidateSize();
+                }
+              }, 100);
+            }
+          });
+          
+          resizeObserver.observe(mapContainer.parentElement);
+        }
+      }
+      
+      // Also handle window resize
+      window.addEventListener('resize', function() {
+        clearTimeout(window.mapResizeTimeout);
+        window.mapResizeTimeout = setTimeout(() => {
+          if (map) {
+            map.invalidateSize();
+          }
+        }, 100);
+      });
+    });
+
+    // Remove the old form submit handler and replace with the auto prediction
+    // No longer needed: document.getElementById("predict-form").addEventListener("submit", ...);
+  </script>
+</body>
+</html>
